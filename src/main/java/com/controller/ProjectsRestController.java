@@ -1,4 +1,4 @@
-package com.business.controller;
+package com.controller;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class ProjectsRestController {
 	private ProjectService projectService;
 
 	@RequestMapping(value = "/getProjects", method = RequestMethod.GET)
-	public List<Project> getSomething(@RequestParam(value = "request") String request,	@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
+	public List<Project> getProjects(@RequestParam(value = "request") String request,	@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start getSomething");
