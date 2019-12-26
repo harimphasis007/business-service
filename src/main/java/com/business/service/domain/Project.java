@@ -1,10 +1,8 @@
-package com.business.service.dto;
+package com.business.service.domain;
 
 import java.time.Instant;
 
-import com.business.service.domain.Project;
-
-public class ProjectDTO {
+public class Project {
 	
 	private String projectNo;
 	private String projName;
@@ -23,29 +21,8 @@ public class ProjectDTO {
 	public String getProjName() {
 		return projName;
 	}
-
 	public void setProjName(String projName) {
 		this.projName = projName;
-	}
-
-	public ProjectDTO() {
-		
-	}
-	
-	public ProjectDTO(Project project) {
-		this.projectNo = project.getProjectNo();
-		this.projName = project.getProjName();
-		this.program = project.getProgram();
-		this.member = project.getMember();
-		this.projectStatus = project.getProjectStatus();
-		this.commitmentStatus = project.getCommitmentStatus();
-		this.commitmentBalance = project.getCommitmentBalance();
-		this.commitmentExpiration = project.getCommitmentExpiration();
-		this.cisProgramType = project.getCisProgramType();
-		this.projEffDate = project.getProjEffDate();
-		this.custNo = project.getCustNo();
-		this.custContactId = project.getCustContactId();
-		
 	}
 	public String getProjectNo() {
 		return projectNo;
@@ -53,55 +30,42 @@ public class ProjectDTO {
 	public void setProjectNo(String projectNo) {
 		this.projectNo = projectNo;
 	}
-	
 	public String getProgram() {
 		return program;
 	}
-
 	public void setProgram(String program) {
 		this.program = program;
 	}
-
 	public String getMember() {
 		return member;
 	}
-
 	public void setMember(String member) {
 		this.member = member;
 	}
-
 	public String getProjectStatus() {
 		return projectStatus;
 	}
-
 	public void setProjectStatus(String projectStatus) {
 		this.projectStatus = projectStatus;
 	}
-
 	public String getCommitmentStatus() {
 		return commitmentStatus;
 	}
-
 	public void setCommitmentStatus(String commitmentStatus) {
 		this.commitmentStatus = commitmentStatus;
 	}
-
 	public double getCommitmentBalance() {
 		return commitmentBalance;
 	}
-
 	public void setCommitmentBalance(double commitmentBalance) {
 		this.commitmentBalance = commitmentBalance;
 	}
-
 	public Instant getCommitmentExpiration() {
 		return commitmentExpiration;
 	}
-
 	public void setCommitmentExpiration(Instant commitmentExpiration) {
 		this.commitmentExpiration = commitmentExpiration;
 	}
-
 	public String getCisProgramType() {
 		return cisProgramType;
 	}
