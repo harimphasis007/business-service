@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.business.service.domain.ApplicationReviewDetails;
+import com.business.service.domain.EmailNotificationsAndContacts;
 import com.business.service.domain.Project;
 import com.business.service.domain.ProjectDetails;
+import com.business.service.domain.ProjectLog;
 import com.business.service.domain.SearchControl;
 import com.business.service.service.ProjectService;
 
@@ -120,6 +122,54 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
+	
+	@RequestMapping(value = "/getEmailNotificationsAndContacts", method = RequestMethod.GET)
+	public EmailNotificationsAndContacts getEmailNotificationsAndContacts(@RequestParam String projectNo) {
+		
+		EmailNotificationsAndContacts response;
+
+		response = projectService.getEmailNotificationsAndContacts(projectNo);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/getProjectLog", method = RequestMethod.GET)
+	public List<ProjectLog> getProjectLog(@RequestParam String projectNo) {
+		
+		List<ProjectLog> response;
+
+		response = projectService.getProjectLog(projectNo);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/searchProject", method = RequestMethod.GET)
+	public List<Project> searchProject(@RequestParam String projectNo, 
+			@RequestParam String projectName, 
+			@RequestParam String program, 
+			@RequestParam String projectStatus, 
+			@RequestParam String commitmentStatus, 
+			@RequestParam String member) {
+		
+		List<Project> response;
+
+		response = projectService.searchProject(projectNo, projectName, program, projectStatus, commitmentStatus, member);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+
 
 	@RequestMapping(value = "/<add method name here>", method = RequestMethod.POST)
 	public String postSomething(@RequestParam(value = "request") String request,@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
