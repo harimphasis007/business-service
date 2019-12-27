@@ -1,4 +1,4 @@
-package com.controller;
+package com.business.service.web.rest.controller;
 
 import java.util.List;
 
@@ -11,14 +11,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.business.domain.Project;
+import com.business.service.domain.ApplicationReviewDetails;
+import com.business.service.domain.Project;
+import com.business.service.domain.ProjectDetails;
+import com.business.service.domain.SearchControl;
 import com.business.service.service.ProjectService;
 
 /**
  * Created by oneclicklabs.io
  */
 @RestController
-@RequestMapping("/<add your restful service class name here>")
+@RequestMapping("/projects")
 public class ProjectsRestController {
 
 	// Logger instance
@@ -27,6 +30,7 @@ public class ProjectsRestController {
 	@Autowired
 	private ProjectService projectService;
 
+	/*
 	@RequestMapping(value = "/getProjects", method = RequestMethod.GET)
 	public List<Project> getProjects(@RequestParam(value = "request") String request,	@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
 		
@@ -53,6 +57,62 @@ public class ProjectsRestController {
 			//response = e.getMessage().toString();
 			logger.error(e.getMessage().toString());
 		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}*/
+	
+	@RequestMapping(value = "/getProjects", method = RequestMethod.GET)
+	public List<Project> getProjects() {
+		
+		List<Project> response = null;
+
+		response = projectService.getProjects();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/getSearchControls", method = RequestMethod.GET)
+	public SearchControl getSearchControls() {
+		
+		SearchControl response;
+
+		response = projectService.getSearchControl();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/getProjectInfoBeneficiaries", method = RequestMethod.GET)
+	public ProjectDetails getProjectInfoBeneficiaries(@RequestParam String projectNo) {
+		
+		ProjectDetails response;
+
+		response = projectService.getProjectInfoBeneficiaries(projectNo);
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("result: '" + response + "'");
+			logger.debug("End getSomething");
+		}
+		return response;
+	}
+	
+	@RequestMapping(value = "/getApplicationReviewDetails", method = RequestMethod.GET)
+	public ApplicationReviewDetails getApplicationReviewDetails(@RequestParam String projectNo) {
+		
+		ApplicationReviewDetails response;
+
+		response = projectService.getApplicationReviewDetails(projectNo);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("result: '" + response + "'");
