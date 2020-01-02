@@ -1,9 +1,12 @@
 package com.business.service.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.time.Instant;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Project {
-	
+
 	private String projectNo;
 	private String projName;
 	private String program;
@@ -16,8 +19,8 @@ public class Project {
 	private Instant projEffDate;
 	private String custNo;
 	private String custContactId;
-	
-	
+
+
 	public String getProjName() {
 		return projName;
 	}
