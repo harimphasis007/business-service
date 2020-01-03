@@ -3,23 +3,23 @@ package com.business.service.domain;
 import java.time.Instant;
 
 public class ApplicationReviewDetails {
-	private Instant applicationDate;
+	private String applicationDate;
 	private double totalAmountRequested;
 	private int totalReviewTurntime;
 	private Instant notificationSentDate;
 	private String certifiationName;
 	private String certificationTitle;
-	private Instant certificationDate;
+	private String certificationDate;
 	private boolean isProjectSpecificApplication;
 	private String projectNameMemberSpecified;
 	private String projectDescription;
 	private String currentReviewStatus;
 	private String currentAssignment;
-	private Instant currentAssignmentStartDate;
+	private String currentAssignmentStartDate;
 	private int currentTurntimeDaysElapsed;
 	//Analyst Fields
 	private String assignedAnalyst;
-	private Instant analystReviewStartDate;
+	private String analystReviewStartDate;
 	private Instant analystReviewEndDate;
 	private int analystTurntime;
 	private String analystComments;
@@ -31,11 +31,11 @@ public class ApplicationReviewDetails {
 	private Instant managerReviewEndDate;
 	private int managerTurntime;
 	private String managerComments;
-	
-	public Instant getApplicationDate() {
+
+	public String getApplicationDate() {
 		return applicationDate;
 	}
-	public void setApplicationDate(Instant applicationDate) {
+	public void setApplicationDate(String applicationDate) {
 		this.applicationDate = applicationDate;
 	}
 	public double getTotalAmountRequested() {
@@ -68,10 +68,10 @@ public class ApplicationReviewDetails {
 	public void setCertificationTitle(String certificationTitle) {
 		this.certificationTitle = certificationTitle;
 	}
-	public Instant getCertificationDate() {
+	public String getCertificationDate() {
 		return certificationDate;
 	}
-	public void setCertificationDate(Instant certificationDate) {
+	public void setCertificationDate(String certificationDate) {
 		this.certificationDate = certificationDate;
 	}
 	public boolean isProjectSpecificApplication() {
@@ -104,10 +104,10 @@ public class ApplicationReviewDetails {
 	public void setCurrentAssignment(String currentAssignment) {
 		this.currentAssignment = currentAssignment;
 	}
-	public Instant getCurrentAssignmentStartDate() {
+	public String getCurrentAssignmentStartDate() {
 		return currentAssignmentStartDate;
 	}
-	public void setCurrentAssignmentStartDate(Instant currentAssignmentStartDate) {
+	public void setCurrentAssignmentStartDate(String currentAssignmentStartDate) {
 		this.currentAssignmentStartDate = currentAssignmentStartDate;
 	}
 	public int getCurrentTurntimeDaysElapsed() {
@@ -122,10 +122,10 @@ public class ApplicationReviewDetails {
 	public void setAssignedAnalyst(String assignedAnalyst) {
 		this.assignedAnalyst = assignedAnalyst;
 	}
-	public Instant getAnalystReviewStartDate() {
+	public String getAnalystReviewStartDate() {
 		return analystReviewStartDate;
 	}
-	public void setAnalystReviewStartDate(Instant analystReviewStartDate) {
+	public void setAnalystReviewStartDate(String analystReviewStartDate) {
 		this.analystReviewStartDate = analystReviewStartDate;
 	}
 	public Instant getAnalystReviewEndDate() {
@@ -188,6 +188,6 @@ public class ApplicationReviewDetails {
 	public void setManagerComments(String managerComments) {
 		this.managerComments = managerComments;
 	}
-	
-	
+
+
 }

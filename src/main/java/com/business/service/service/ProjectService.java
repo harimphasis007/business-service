@@ -155,6 +155,7 @@ public class ProjectService {
 
     private Project getProjectDetails(String projectNumber) {
         final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
+        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
         final RestTemplate restTemplate = new RestTemplate();
         final Project project = new Project();
 
@@ -175,20 +176,43 @@ public class ProjectService {
     }
 
 	public ApplicationReviewDetails getApplicationReviewDetails(String projectNo) {
-		ApplicationReviewDetails applicationReviewDetails = new ApplicationReviewDetails();
-		applicationReviewDetails.setApplicationDate(new Date().toInstant());
-		applicationReviewDetails.setTotalAmountRequested(22000000);
-		applicationReviewDetails.setCertifiationName("John Smith");
-		applicationReviewDetails.setCertificationTitle("Lending Specialist");
-		applicationReviewDetails.setCertificationDate(new Date().toInstant());
-		applicationReviewDetails.setProjectSpecificApplication(false);
-		applicationReviewDetails.setCurrentReviewStatus("Analyst Review");
-		applicationReviewDetails.setCurrentAssignment("John");
-		applicationReviewDetails.setCurrentAssignmentStartDate(new Date().toInstant());
+        final Project project = getProjectDetails(projectNo);
+        final ApplicationReviewDetails applicationReviewDetails = new ApplicationReviewDetails();
+        final String dataHubEndpointProjectApplicationReviewDetails = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/applications/" + project.getId();
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjectApplicationReviewDetails,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement applicationDate = jObj.get("applicationDate");
+        JsonElement totalAmountRequested = jObj.get("totalAmountRequested");
+        JsonElement certificationName = jObj.get("certificationName");
+        JsonElement certificationTitle = jObj.get("certificationTitle");
+        JsonElement certificationDate = jObj.get("certificationDate");
+        JsonElement projectSpecificApplication = jObj.get("projectSpecificApplication");
+        JsonElement currentReviewStatus = jObj.get("currentReviewStatus");
+        JsonElement currentAssign = jObj.getAsJsonObject("assignment").get("currentAssign");
+        JsonElement currentAssStDate = jObj.getAsJsonObject("assignment").get("currentAssStDate");
+        JsonElement analystAssign = jObj.getAsJsonObject("assignment").get("analystAssign");
+        JsonElement managerAssign = jObj.getAsJsonObject("assignment").get("managerAssign");
+        JsonElement reviewStartDate = jObj.getAsJsonObject("assignment").getAsJsonObject("worker").getAsJsonObject("review").get("reviewStartDate");
+
+		applicationReviewDetails.setApplicationDate(applicationDate instanceof JsonNull ? "" : applicationDate.getAsString());
+		applicationReviewDetails.setTotalAmountRequested(totalAmountRequested instanceof JsonNull ? 0 : totalAmountRequested.getAsDouble());
+		applicationReviewDetails.setCertifiationName(certificationName instanceof JsonNull ? "" : certificationName.getAsString());
+		applicationReviewDetails.setCertificationTitle(certificationTitle instanceof JsonNull ? "" : certificationTitle.getAsString());
+		applicationReviewDetails.setCertificationDate(certificationDate instanceof JsonNull ? "" : certificationDate.getAsString());
+		applicationReviewDetails.setProjectSpecificApplication(projectSpecificApplication instanceof JsonNull ? false : ("NO".equals(projectSpecificApplication.getAsString()) ? false : true));
+		applicationReviewDetails.setCurrentReviewStatus(currentReviewStatus instanceof JsonNull ? "" : currentReviewStatus.getAsString());
+		applicationReviewDetails.setCurrentAssignment(currentAssign instanceof JsonNull ? "" : currentAssign.getAsString());
+		applicationReviewDetails.setCurrentAssignmentStartDate(currentAssStDate instanceof JsonNull ? "" : currentAssStDate.getAsString());
 		applicationReviewDetails.setCurrentTurntimeDaysElapsed(6);
-		applicationReviewDetails.setAssignedAnalyst("John");
-		applicationReviewDetails.setAnalystReviewStartDate(new Date().toInstant());
-		applicationReviewDetails.setAssinedManager("Smith");
+		applicationReviewDetails.setAssignedAnalyst(analystAssign instanceof JsonNull ? "" : analystAssign.getAsString());
+		applicationReviewDetails.setAnalystReviewStartDate(reviewStartDate instanceof JsonNull ? "" : reviewStartDate.getAsString());
+		applicationReviewDetails.setAssinedManager(managerAssign instanceof JsonNull ? "" : managerAssign.getAsString());
 
 		return applicationReviewDetails;
 	}
