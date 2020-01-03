@@ -40,16 +40,22 @@ public class ProjectService {
 
         for (int i = 0; i < jarr.size(); i++) {
             final Project project = new Project();
-            project.setProjectNo(jarr.get(i).getAsJsonObject().get("projectNo").getAsString());
-            project.setProjName(jarr.get(i).getAsJsonObject().get("projectName").getAsString());
-            project.setProgram(jarr.get(i).getAsJsonObject().getAsJsonObject("program").get("programName").getAsString());
-            project.setMember(jarr.get(i).getAsJsonObject().getAsJsonObject("member").get("memberName").getAsString());
-            project.setProjectStatus(jarr.get(i).getAsJsonObject().get("projectStatus").getAsString());
-            project.setCommitmentStatus(jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentStatus").getAsString());
-            String commitmentBal = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentBal").getAsString();
-            System.out.println(commitmentBal.isEmpty());
-            project.setCommitmentBalance(Float.parseFloat(commitmentBal.isEmpty()? "0": commitmentBal));
+            JsonElement projectNo = jarr.get(i).getAsJsonObject().get("projectNo");
+            JsonElement projectName = jarr.get(i).getAsJsonObject().get("projectName");
+            JsonElement program = jarr.get(i).getAsJsonObject().getAsJsonObject("program").get("programName");
+            JsonElement memberName = jarr.get(i).getAsJsonObject().getAsJsonObject("member").get("memberName");
+            JsonElement projectStatus = jarr.get(i).getAsJsonObject().get("projectStatus");
+            JsonElement commitmentStatus = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentStatus");
             JsonElement commitmentExpiration = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentExpiration");
+
+            project.setProjectNo(projectNo instanceof JsonNull ? "" : projectNo.getAsString());
+            project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
+            project.setProgram(program instanceof JsonNull ? "" : program.getAsString());
+            project.setMember(memberName instanceof JsonNull ? "" : memberName.getAsString());
+            project.setProjectStatus(projectStatus instanceof JsonNull ? "" : projectStatus.getAsString());
+            project.setCommitmentStatus(commitmentStatus instanceof JsonNull ? "" : commitmentStatus.getAsString());
+            String commitmentBal = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentBal").getAsString();
+            project.setCommitmentBalance(Float.parseFloat(commitmentBal.isEmpty()? "0": commitmentBal));
             project.setCommitmentExpiration(commitmentExpiration instanceof JsonNull ? "" : commitmentExpiration.getAsString());
             projects.add(project);
         }
