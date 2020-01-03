@@ -2,11 +2,10 @@ package com.business.service.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.time.Instant;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Project {
 
+    private String id;
 	private String projectNo;
 	private String projName;
 	private String program;
@@ -20,8 +19,15 @@ public class Project {
 	private String custNo;
 	private String custContactId;
 
+    public String getId() {
+        return id;
+    }
 
-	public String getProjName() {
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getProjName() {
 		return projName;
 	}
 	public void setProjName(String projName) {
