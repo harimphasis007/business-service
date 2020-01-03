@@ -4,20 +4,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.*;
+
+import com.business.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.business.service.domain.ApplicationReviewDetails;
-import com.business.service.domain.EmailNotification;
-import com.business.service.domain.EmailNotificationsAndContacts;
-import com.business.service.domain.Project;
-import com.business.service.domain.ProjectContacts;
-import com.business.service.domain.ProjectDetails;
-import com.business.service.domain.ProjectLog;
-import com.business.service.domain.SearchControl;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -25,17 +18,39 @@ public class ProjectService {
 	private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
 	public List<Project> getProjects(){
-        final String dataHubEndpointProjects = "<<Your Endpoint>>";
-
+        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects";
         RestTemplate restTemplate = new RestTemplate();
+        List<Project>  projects = new ArrayList<>();
 
-        ResponseEntity<Project[]> response = restTemplate.getForEntity(
+        /*Commenting this, in case we want to do in the right way*/
+        /*ResponseEntity<Project[]> response = restTemplate.getForEntity(
             dataHubEndpointProjects,
             Project[].class);
 
         Project[] projectArray = response.getBody();
-        List<Project>  projects = new ArrayList<>();
-        for (Project project: projectArray) {
+        for (final Project project: projectArray) {
+            projects.add(project);
+        }*/
+
+        String json = restTemplate.getForObject(
+            dataHubEndpointProjects,
+            String.class);
+
+        JsonArray jarr = new JsonParser().parse(json).getAsJsonArray();
+
+        for (int i = 0; i < jarr.size(); i++) {
+            final Project project = new Project();
+            project.setProjectNo(jarr.get(i).getAsJsonObject().get("projectNo").getAsString());
+            project.setProjName(jarr.get(i).getAsJsonObject().get("projectName").getAsString());
+            project.setProgram(jarr.get(i).getAsJsonObject().getAsJsonObject("program").get("programName").getAsString());
+            project.setMember(jarr.get(i).getAsJsonObject().getAsJsonObject("member").get("memberName").getAsString());
+            project.setProjectStatus(jarr.get(i).getAsJsonObject().get("projectStatus").getAsString());
+            project.setCommitmentStatus(jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentStatus").getAsString());
+            String commitmentBal = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentBal").getAsString();
+            System.out.println(commitmentBal.isEmpty());
+            project.setCommitmentBalance(Float.parseFloat(commitmentBal.isEmpty()? "0": commitmentBal));
+            JsonElement commitmentExpiration = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentExpiration");
+            project.setCommitmentExpiration(commitmentExpiration instanceof JsonNull ? "" : commitmentExpiration.getAsString());
             projects.add(project);
         }
 

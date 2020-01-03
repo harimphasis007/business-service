@@ -14,9 +14,9 @@ public class Project {
 	private String projectStatus;
 	private String commitmentStatus;
 	private double commitmentBalance;
-	private Instant commitmentExpiration;
+	private String commitmentExpiration;
 	private String cisProgramType;
-	private Instant projEffDate;
+	private String projEffDate;
 	private String custNo;
 	private String custContactId;
 
@@ -63,10 +63,10 @@ public class Project {
 	public void setCommitmentBalance(double commitmentBalance) {
 		this.commitmentBalance = commitmentBalance;
 	}
-	public Instant getCommitmentExpiration() {
+	public String getCommitmentExpiration() {
 		return commitmentExpiration;
 	}
-	public void setCommitmentExpiration(Instant commitmentExpiration) {
+	public void setCommitmentExpiration(String commitmentExpiration) {
 		this.commitmentExpiration = commitmentExpiration;
 	}
 	public String getCisProgramType() {
@@ -75,10 +75,10 @@ public class Project {
 	public void setCisProgramType(String cisProgramType) {
 		this.cisProgramType = cisProgramType;
 	}
-	public Instant getProjEffDate() {
+	public String getProjEffDate() {
 		return projEffDate;
 	}
-	public void setProjEffDate(Instant projEffDate) {
+	public void setProjEffDate(String projEffDate) {
 		this.projEffDate = projEffDate;
 	}
 	public String getCustNo() {
