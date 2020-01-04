@@ -23,7 +23,7 @@ public class Project implements Serializable {
 //
 //    private InfoBeneficiaries infoBeneficiaries;
 //
-//    private Commitment commitment;
+    private Commitment commitment;
 //
 //    private Assignment assignment;
 //
@@ -33,11 +33,37 @@ public class Project implements Serializable {
 
     private Set<Loan> loans = new HashSet<>();
 
-//    private Set<ProjectLog> projectLogs = new HashSet<>();
+    //    private Set<ProjectLog> projectLogs = new HashSet<>();
 //
 //    private Set<NotificationHistory> notificationHistories = new HashSet<>();
 //
 //    private Program program;
+    private Set<DrawdownHistory> drawdownHistories = new HashSet<>();
+
+    public Set<DrawdownHistory> getDrawdownHistories() {
+        return drawdownHistories;
+    }
+
+    public Project drawdownHistories(Set<DrawdownHistory> drawdownHistories) {
+        this.drawdownHistories = drawdownHistories;
+        return this;
+    }
+
+    public Project addDrawdownHistory(DrawdownHistory drawdownHistory) {
+        this.drawdownHistories.add(drawdownHistory);
+        drawdownHistory.setProject(this);
+        return this;
+    }
+
+    public Project removeDrawdownHistory(DrawdownHistory drawdownHistory) {
+        this.drawdownHistories.remove(drawdownHistory);
+        drawdownHistory.setProject(null);
+        return this;
+    }
+
+    public void setDrawdownHistories(Set<DrawdownHistory> drawdownHistories) {
+        this.drawdownHistories = drawdownHistories;
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -113,18 +139,18 @@ public class Project implements Serializable {
 //        this.infoBeneficiaries = infoBeneficiaries;
 //    }
 //
-//    public Commitment getCommitment() {
-//        return commitment;
-//    }
-//
-//    public Project commitment(Commitment commitment) {
-//        this.commitment = commitment;
-//        return this;
-//    }
-//
-//    public void setCommitment(Commitment commitment) {
-//        this.commitment = commitment;
-//    }
+    public Commitment getCommitment() {
+        return commitment;
+    }
+
+    public Project commitment(Commitment commitment) {
+        this.commitment = commitment;
+        return this;
+    }
+
+    public void setCommitment(Commitment commitment) {
+        this.commitment = commitment;
+    }
 //
 //    public Assignment getAssignment() {
 //        return assignment;
