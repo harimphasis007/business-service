@@ -1,28 +1,108 @@
 package com.business.service.domain;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * A Project.
- */
-public class Project implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Project {
 
-    private static final long serialVersionUID = 1L;
+    private String id;
+	private String projectNo;
+	private String projName;
+	private String program;
+	private String member;
+	private String projectStatus;
+	private String commitmentStatus;
+	private double commitmentBalance;
+	private String commitmentExpiration;
+	private String cisProgramType;
+	private String projEffDate;
+	private String custNo;
+	private String custContactId;
 
-    private Long id;
+    public String getId() {
+        return id;
+    }
 
-    private String projectNo;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    private String projectName;
+    public String getProjName() {
+		return projName;
+	}
+	public void setProjName(String projName) {
+		this.projName = projName;
+	}
+	public String getProjectNo() {
+		return projectNo;
+	}
+	public void setProjectNo(String projectNo) {
+		this.projectNo = projectNo;
+	}
+	public String getProgram() {
+		return program;
+	}
+	public void setProgram(String program) {
+		this.program = program;
+	}
+	public String getMember() {
+		return member;
+	}
+	public void setMember(String member) {
+		this.member = member;
+	}
+	public String getProjectStatus() {
+		return projectStatus;
+	}
+	public void setProjectStatus(String projectStatus) {
+		this.projectStatus = projectStatus;
+	}
+	public String getCommitmentStatus() {
+		return commitmentStatus;
+	}
+	public void setCommitmentStatus(String commitmentStatus) {
+		this.commitmentStatus = commitmentStatus;
+	}
+	public double getCommitmentBalance() {
+		return commitmentBalance;
+	}
+	public void setCommitmentBalance(double commitmentBalance) {
+		this.commitmentBalance = commitmentBalance;
+	}
+	public String getCommitmentExpiration() {
+		return commitmentExpiration;
+	}
+	public void setCommitmentExpiration(String commitmentExpiration) {
+		this.commitmentExpiration = commitmentExpiration;
+	}
+	public String getCisProgramType() {
+		return cisProgramType;
+	}
+	public void setCisProgramType(String cisProgramType) {
+		this.cisProgramType = cisProgramType;
+	}
+	public String getProjEffDate() {
+		return projEffDate;
+	}
+	public void setProjEffDate(String projEffDate) {
+		this.projEffDate = projEffDate;
+	}
+	public String getCustNo() {
+		return custNo;
+	}
+	public void setCustNo(String custNo) {
+		this.custNo = custNo;
+	}
+	public String getCustContactId() {
+		return custContactId;
+	}
+	public void setCustContactId(String custContactId) {
+		this.custContactId = custContactId;
+	}
 
-    private String projectStatus;
-
-//    private Application application;
-//
-//    private InfoBeneficiaries infoBeneficiaries;
-//
     private Commitment commitment;
 //
 //    private Assignment assignment;
@@ -49,71 +129,30 @@ public class Project implements Serializable {
         return this;
     }
 
-    public Project addDrawdownHistory(DrawdownHistory drawdownHistory) {
-        this.drawdownHistories.add(drawdownHistory);
-        drawdownHistory.setProject(this);
-        return this;
-    }
+//    public Project addDrawdownHistory(DrawdownHistory drawdownHistory) {
+//        this.drawdownHistories.add(drawdownHistory);
+//        drawdownHistory.setProject(this);
+//        return this;
+//    }
+//
+//    public Project removeDrawdownHistory(DrawdownHistory drawdownHistory) {
+//        this.drawdownHistories.remove(drawdownHistory);
+//        drawdownHistory.setProject(null);
+//        return this;
+//    }
+//
+//    public void setDrawdownHistories(Set<DrawdownHistory> drawdownHistories) {
+//        this.drawdownHistories = drawdownHistories;
+//    }
 
-    public Project removeDrawdownHistory(DrawdownHistory drawdownHistory) {
-        this.drawdownHistories.remove(drawdownHistory);
-        drawdownHistory.setProject(null);
-        return this;
-    }
-
-    public void setDrawdownHistories(Set<DrawdownHistory> drawdownHistories) {
-        this.drawdownHistories = drawdownHistories;
-    }
-
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getProjectNo() {
-        return projectNo;
-    }
 
     public Project projectNo(String projectNo) {
         this.projectNo = projectNo;
         return this;
     }
 
-    public void setProjectNo(String projectNo) {
-        this.projectNo = projectNo;
-    }
 
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public Project projectName(String projectName) {
-        this.projectName = projectName;
-        return this;
-    }
-
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-
-    public String getProjectStatus() {
-        return projectStatus;
-    }
-
-    public Project projectStatus(String projectStatus) {
-        this.projectStatus = projectStatus;
-        return this;
-    }
-
-    public void setProjectStatus(String projectStatus) {
-        this.projectStatus = projectStatus;
-    }
-
-//    public Application getApplication() {
+    //    public Application getApplication() {
 //        return application;
 //    }
 //
@@ -200,21 +239,21 @@ public class Project implements Serializable {
         return this;
     }
 
-    public Project addLoan(Loan loan) {
-        this.loans.add(loan);
-        loan.setProject(this);
-        return this;
-    }
-
-    public Project removeLoan(Loan loan) {
-        this.loans.remove(loan);
-        loan.setProject(null);
-        return this;
-    }
-
-    public void setLoans(Set<Loan> loans) {
-        this.loans = loans;
-    }
+//    public Project addLoan(Loan loan) {
+//        this.loans.add(loan);
+//        loan.setProject(this);
+//        return this;
+//    }
+//
+//    public Project removeLoan(Loan loan) {
+//        this.loans.remove(loan);
+//        loan.setProject(null);
+//        return this;
+//    }
+//
+//    public void setLoans(Set<Loan> loans) {
+//        this.loans = loans;
+//    }
 
 //    public Set<ProjectLog> getProjectLogs() {
 //        return projectLogs;
@@ -280,29 +319,5 @@ public class Project implements Serializable {
 //    }
 //    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Project)) {
-            return false;
-        }
-        return id != null && id.equals(((Project) o).id);
-    }
 
-    @Override
-    public int hashCode() {
-        return 31;
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-            "id=" + getId() +
-            ", projectNo='" + getProjectNo() + "'" +
-            ", projectName='" + getProjectName() + "'" +
-            ", projectStatus='" + getProjectStatus() + "'" +
-            "}";
-    }
 }
