@@ -2,7 +2,7 @@ package com.business.service.web.rest;
 
 import com.business.service.domain.Loan;
 import com.business.service.domain.Loanpool;
-import com.business.service.domain.Project;
+import com.business.service.domain.Projectpojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +33,8 @@ public class LoanResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of loans in body.
      */
     @GetMapping("/loansbyproject/{projectId}")
-    public List<Loan> getAllLoansByProject(@PathVariable String projectId) {
-        Project project = getProject(projectId);
+    public List<Loan> getAllLoansByProjectpojo(@PathVariable String projectId) {
+        Projectpojo project = getProjectpojo(projectId);
 
 
         ResponseEntity<Loan[]> responseEntity =
@@ -49,16 +49,16 @@ public class LoanResource {
      */
 
     @GetMapping("/loanspoolbyproject/{projectId}")
-    public Loanpool getLoansPoolByProject(@PathVariable String projectId) {
-        Project project = getProject(projectId);
+    public Loanpool getLoansPoolByProjectpojo(@PathVariable String projectId) {
+        Projectpojo project = getProjectpojo(projectId);
         return project.getLoanpool();
     }
 
 
-    private Project getProject(@PathVariable String projectId) {
+    private Projectpojo getProjectpojo(@PathVariable String projectId) {
         log.debug("REST request to get Loan : {}", projectId);
         return restTemplate.getForObject(
-            uri + "projectsbyprojectid/" + projectId, Project.class);
+            uri + "projectsbyprojectid/" + projectId, Projectpojo.class);
     }
 
 }

@@ -2,7 +2,7 @@ package com.business.service.web.rest;
 
 import com.business.service.domain.Commitment;
 import com.business.service.domain.DrawdownHistory;
-import com.business.service.domain.Project;
+import com.business.service.domain.Projectpojo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class CommitmentResource {
     @GetMapping("/commitmentsbyproject/{projectId}")
     public Commitment getCommitment(@PathVariable String projectId) {
         log.debug("REST request to get Commitment : {}", projectId);
-        Project project = getProject(projectId);
+        Projectpojo project = getProjectpojo(projectId);
 
         return project.getCommitment();
 
@@ -51,17 +51,17 @@ public class CommitmentResource {
     @GetMapping("/drawdownhistoriesbyproject/{projectId}")
     public List<DrawdownHistory> getDrawdownHistory(@PathVariable String projectId) {
         log.debug("REST request to get DrawdownHistory : {}", projectId);
-        Project project = getProject(projectId);
+        Projectpojo project = getProjectpojo(projectId);
 
         ResponseEntity<DrawdownHistory[]> responseEntity =
             restTemplate.getForEntity(uri + "drawdownhistoriesbyproject/" + project.getId(), DrawdownHistory[].class);
         return Arrays.asList(responseEntity.getBody());
     }
 
-    private Project getProject(@PathVariable String projectId) {
+    private Projectpojo getProjectpojo(@PathVariable String projectId) {
         log.debug("REST request to get commitment : {}", projectId);
         return restTemplate.getForObject(
-            uri + "projectsbyprojectid/" + projectId, Project.class);
+            uri + "projectsbyprojectid/" + projectId, Projectpojo.class);
     }
 
 }

@@ -34,7 +34,7 @@ public class Loan implements Serializable {
 
     private String rejectionReason;
 
-    private Project project;
+    private Projectpojo project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -175,16 +175,16 @@ public class Loan implements Serializable {
         this.rejectionReason = rejectionReason;
     }
 
-    public Project getProject() {
+    public Projectpojo getProjectpojo() {
         return project;
     }
 
-    public Loan project(Project project) {
+    public Loan project(Projectpojo project) {
         this.project = project;
         return this;
     }
 
-    public void setProject(Project project) {
+    public void setProjectpojo(Projectpojo project) {
         this.project = project;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
