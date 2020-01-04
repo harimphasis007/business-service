@@ -4,16 +4,16 @@ import java.time.Instant;
 import java.util.List;
 
 public class EmailNotification {
-	private Instant sentDate;
+	private String sentDate;
 	private String fromEmailAddress;
 	private List<String> toEmailAddress;
 	private List<String> ccEmailAddress;
 	private String notificationType;
 	private String subjectLine;
-	public Instant getSentDate() {
+	public String getSentDate() {
 		return sentDate;
 	}
-	public void setSentDate(Instant sentDate) {
+	public void setSentDate(String sentDate) {
 		this.sentDate = sentDate;
 	}
 	public String getFromEmailAddress() {
