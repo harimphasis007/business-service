@@ -9,6 +9,7 @@ import com.google.gson.*;
 import com.business.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.client.RestTemplate;
@@ -19,8 +20,8 @@ public class ProjectService {
 
 	public List<Project> getProjects(){
         final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects";
-        RestTemplate restTemplate = new RestTemplate();
-        List<Project>  projects = new ArrayList<>();
+        final List<Project>  projects = new ArrayList<>();
+        final RestTemplate restTemplate = new RestTemplate();
 
         /*Commenting this, in case we want to do in the right way*/
         /*ResponseEntity<Project[]> response = restTemplate.getForEntity(
@@ -32,11 +33,11 @@ public class ProjectService {
             projects.add(project);
         }*/
 
-        String json = restTemplate.getForObject(
+        final String json = restTemplate.getForObject(
             dataHubEndpointProjects,
             String.class);
 
-        JsonArray jarr = new JsonParser().parse(json).getAsJsonArray();
+        final JsonArray jarr = new JsonParser().parse(json).getAsJsonArray();
 
         for (int i = 0; i < jarr.size(); i++) {
             final Project project = new Project();
@@ -113,38 +114,105 @@ public class ProjectService {
 	}
 
 	public ProjectDetails getProjectInfoBeneficiaries(String projectNo) {
-		ProjectDetails projectDetails = new ProjectDetails();
+	    final Project project = getProjectDetails(projectNo);
+        final ProjectDetails projectDetails = new ProjectDetails();
+        final String dataHubEndpointProjectInfoBeneficiaries = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/info-beneficiaries/" + project.getId();
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjectInfoBeneficiaries,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement jobCreated = jObj.get("jobCreated");
+        JsonElement jobRetained = jObj.get("jobRetained");
+        JsonElement ownerOccUnits = jObj.get("ownerOccUnits");
+        JsonElement rentalUnits = jObj.get("rentalUnits");
+        JsonElement geoDefinedBeneficiaries = jObj.get("geoDefinedBeneficiaries");
+        JsonElement individualBeneficiaries = jObj.get("individualBeneficiaries");
+        JsonElement activityBeneficiaries = jObj.get("activityBeneficiaries");
+        JsonElement otherBeneficiaries = jObj.get("otherBeneficiaries");
+        JsonElement area = jObj.get("area");
+        JsonElement developmentInd = jObj.get("developmentInd");
+
+
 		projectDetails.setProjectNo(projectNo);
-		projectDetails.setProjName("2019 UDA #4999");
-		projectDetails.setProgramType("Urban");
-		projectDetails.setProjectType("Housing");
-		projectDetails.setNoOfRentalUnits(5);
-		projectDetails.setNoOfOwnedUnits(10);
-		projectDetails.setNoOfJobsCreated(2);
-		projectDetails.setNoOfJobsRetained(5);
-		projectDetails.setGeoDefinedBeneficiaries("TargetedIncome");
-		projectDetails.setIndividualBeneficiaries("JobsCreated");
-		projectDetails.setActivityBeneficiaries("SBA");
-		projectDetails.setOtherBeneficiaries("");
+		projectDetails.setProjName(project.getProjName());
+		projectDetails.setProgramType(area instanceof JsonNull ? "" : area.getAsString());
+		projectDetails.setProjectType(developmentInd instanceof JsonNull ? "" : developmentInd.getAsString());
+		projectDetails.setNoOfRentalUnits(rentalUnits instanceof JsonNull ? 0 : rentalUnits.getAsInt());
+		projectDetails.setNoOfOwnedUnits(ownerOccUnits instanceof JsonNull ? 0 : ownerOccUnits.getAsInt());
+		projectDetails.setNoOfJobsCreated(jobCreated instanceof JsonNull ? 0 : jobCreated.getAsInt());
+		projectDetails.setNoOfJobsRetained(jobRetained instanceof JsonNull ? 0 : jobRetained.getAsInt());
+		projectDetails.setGeoDefinedBeneficiaries(geoDefinedBeneficiaries instanceof JsonNull ? "" : geoDefinedBeneficiaries.getAsString());
+		projectDetails.setIndividualBeneficiaries(individualBeneficiaries instanceof JsonNull ? "" : individualBeneficiaries.getAsString());
+		projectDetails.setActivityBeneficiaries(activityBeneficiaries instanceof JsonNull ? "": activityBeneficiaries.getAsString());
+		projectDetails.setOtherBeneficiaries(otherBeneficiaries instanceof JsonNull ? "" : otherBeneficiaries.getAsString());
 
 		return projectDetails;
 	}
 
+    private Project getProjectDetails(String projectNumber) {
+        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
+        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
+        final RestTemplate restTemplate = new RestTemplate();
+        final Project project = new Project();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjects,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement projectName = jObj.get("projectName");
+        JsonElement idJSONElement = jObj.get("id");
+
+        project.setId(idJSONElement instanceof JsonNull ? "" : idJSONElement.getAsString());
+        project.setProjectNo(projectNumber);
+        project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
+
+        return project;
+    }
+
 	public ApplicationReviewDetails getApplicationReviewDetails(String projectNo) {
-		ApplicationReviewDetails applicationReviewDetails = new ApplicationReviewDetails();
-		applicationReviewDetails.setApplicationDate(new Date().toInstant());
-		applicationReviewDetails.setTotalAmountRequested(22000000);
-		applicationReviewDetails.setCertifiationName("John Smith");
-		applicationReviewDetails.setCertificationTitle("Lending Specialist");
-		applicationReviewDetails.setCertificationDate(new Date().toInstant());
-		applicationReviewDetails.setProjectSpecificApplication(false);
-		applicationReviewDetails.setCurrentReviewStatus("Analyst Review");
-		applicationReviewDetails.setCurrentAssignment("John");
-		applicationReviewDetails.setCurrentAssignmentStartDate(new Date().toInstant());
+        final Project project = getProjectDetails(projectNo);
+        final ApplicationReviewDetails applicationReviewDetails = new ApplicationReviewDetails();
+        final String dataHubEndpointProjectApplicationReviewDetails = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/applications/" + project.getId();
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjectApplicationReviewDetails,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement applicationDate = jObj.get("applicationDate");
+        JsonElement totalAmountRequested = jObj.get("totalAmountRequested");
+        JsonElement certificationName = jObj.get("certificationName");
+        JsonElement certificationTitle = jObj.get("certificationTitle");
+        JsonElement certificationDate = jObj.get("certificationDate");
+        JsonElement projectSpecificApplication = jObj.get("projectSpecificApplication");
+        JsonElement currentReviewStatus = jObj.get("currentReviewStatus");
+        JsonElement currentAssign = jObj.getAsJsonObject("assignment").get("currentAssign");
+        JsonElement currentAssStDate = jObj.getAsJsonObject("assignment").get("currentAssStDate");
+        JsonElement analystAssign = jObj.getAsJsonObject("assignment").get("analystAssign");
+        JsonElement managerAssign = jObj.getAsJsonObject("assignment").get("managerAssign");
+        JsonElement reviewStartDate = jObj.getAsJsonObject("assignment").getAsJsonObject("worker").getAsJsonObject("review").get("reviewStartDate");
+
+		applicationReviewDetails.setApplicationDate(applicationDate instanceof JsonNull ? "" : applicationDate.getAsString());
+		applicationReviewDetails.setTotalAmountRequested(totalAmountRequested instanceof JsonNull ? 0 : totalAmountRequested.getAsDouble());
+		applicationReviewDetails.setCertifiationName(certificationName instanceof JsonNull ? "" : certificationName.getAsString());
+		applicationReviewDetails.setCertificationTitle(certificationTitle instanceof JsonNull ? "" : certificationTitle.getAsString());
+		applicationReviewDetails.setCertificationDate(certificationDate instanceof JsonNull ? "" : certificationDate.getAsString());
+		applicationReviewDetails.setProjectSpecificApplication(projectSpecificApplication instanceof JsonNull ? false : ("NO".equals(projectSpecificApplication.getAsString()) ? false : true));
+		applicationReviewDetails.setCurrentReviewStatus(currentReviewStatus instanceof JsonNull ? "" : currentReviewStatus.getAsString());
+		applicationReviewDetails.setCurrentAssignment(currentAssign instanceof JsonNull ? "" : currentAssign.getAsString());
+		applicationReviewDetails.setCurrentAssignmentStartDate(currentAssStDate instanceof JsonNull ? "" : currentAssStDate.getAsString());
 		applicationReviewDetails.setCurrentTurntimeDaysElapsed(6);
-		applicationReviewDetails.setAssignedAnalyst("John");
-		applicationReviewDetails.setAnalystReviewStartDate(new Date().toInstant());
-		applicationReviewDetails.setAssinedManager("Smith");
+		applicationReviewDetails.setAssignedAnalyst(analystAssign instanceof JsonNull ? "" : analystAssign.getAsString());
+		applicationReviewDetails.setAnalystReviewStartDate(reviewStartDate instanceof JsonNull ? "" : reviewStartDate.getAsString());
+		applicationReviewDetails.setAssinedManager(managerAssign instanceof JsonNull ? "" : managerAssign.getAsString());
 
 		return applicationReviewDetails;
 	}
