@@ -41,6 +41,7 @@ public class ProjectService {
 
         for (int i = 0; i < jarr.size(); i++) {
             final Project project = new Project();
+            JsonElement id = jarr.get(i).getAsJsonObject().get("id");
             JsonElement projectNo = jarr.get(i).getAsJsonObject().get("projectNo");
             JsonElement projectName = jarr.get(i).getAsJsonObject().get("projectName");
             JsonElement program = jarr.get(i).getAsJsonObject().getAsJsonObject("program").get("programName");
@@ -49,6 +50,7 @@ public class ProjectService {
             JsonElement commitmentStatus = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentStatus");
             JsonElement commitmentExpiration = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentExpiration");
 
+            project.setId(id instanceof JsonNull ? "" : id.getAsString());
             project.setProjectNo(projectNo instanceof JsonNull ? "" : projectNo.getAsString());
             project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
             project.setProgram(program instanceof JsonNull ? "" : program.getAsString());
@@ -69,21 +71,21 @@ public class ProjectService {
 			String program,
 			String projectStatus,
 			String commitmentStatus,
-			String member){
-		Project project1 = new Project();
-		List<Project> projects = new ArrayList<Project>();
-		project1.setProjectNo("5000");
-		project1.setProjName("2019 CIP #5000");
-		project1.setProgram("CIP");
-		project1.setMember("#1 - MEMBER 1");
-		project1.setProjectStatus("In Review");
-		project1.setCommitmentStatus("Inactive");
-		//project1.setCommitmentBalance(10000);
+			String member)  {
+        List<Project> results = new ArrayList<>();
+        List<Project> projects = getProjects();
+        for (Project project: projects) {
+            if ((project.getProjectNo() != null && project.getProjectNo().equals(projectNo)) ||
+                (project.getProjName() != null && projectName != null && (project.getProjName().contains(projectName))) ||
+                (project.getProgram() != null && program != null && (project.getProgram().contains(program))) ||
+                (project.getProjectStatus() != null && projectStatus != null && (project.getProjectStatus().contains(projectStatus))) ||
+                (project.getCommitmentStatus() != null && commitmentStatus != null && (project.getCommitmentStatus().contains(commitmentStatus))) ||
+                (project.getMember() != null && member != null && (project.getMember().contains(member)))) {
+                results.add(project);
+            }
+        }
 
-
-		projects.add(project1);
-
-		return projects;
+		return results;
 	}
 
 	public SearchControl getSearchControl() {
@@ -153,28 +155,6 @@ public class ProjectService {
 		return projectDetails;
 	}
 
-    private Project getProjectDetails(String projectNumber) {
-        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
-        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
-        final RestTemplate restTemplate = new RestTemplate();
-        final Project project = new Project();
-
-        final String json = restTemplate.getForObject(
-            dataHubEndpointProjects,
-            String.class);
-
-        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
-
-        JsonElement projectName = jObj.get("projectName");
-        JsonElement idJSONElement = jObj.get("id");
-
-        project.setId(idJSONElement instanceof JsonNull ? "" : idJSONElement.getAsString());
-        project.setProjectNo(projectNumber);
-        project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
-
-        return project;
-    }
-
 	public ApplicationReviewDetails getApplicationReviewDetails(String projectNo) {
         final Project project = getProjectDetails(projectNo);
         final ApplicationReviewDetails applicationReviewDetails = new ApplicationReviewDetails();
@@ -218,27 +198,43 @@ public class ProjectService {
 	}
 
 	public EmailNotificationsAndContacts getEmailNotificationsAndContacts(String projectNo) {
-		EmailNotificationsAndContacts emailNotificationsAndContacts = new EmailNotificationsAndContacts();
+        final Project project = getProjectDetails(projectNo);
+        EmailNotificationsAndContacts emailNotificationsAndContacts = new EmailNotificationsAndContacts();
+        final String dataHubEndpointProjectNotificationHistories = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/notification-histories/" + project.getId();
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjectNotificationHistories,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement sentDate = jObj.get("sentDate");
+        JsonElement fromEmail = jObj.get("fromEmail");
+        JsonElement toAddress = jObj.get("toAddress");
+        JsonElement ccAddress = jObj.get("ccAddress");
+        JsonElement notificationType = jObj.get("notificationType");
+        JsonElement subjectLine = jObj.get("subjectLine");
 
 		List<EmailNotification> emailNotificationsList = new ArrayList<EmailNotification>();
-
 		EmailNotification emailNotification1 = new EmailNotification();
-		emailNotification1.setSentDate(new Date().toInstant());
-		emailNotification1.setFromEmailAddress("CLP@fhlbny.com");
-		List<String> toEmailAddresses = new ArrayList<String>();
-		toEmailAddresses.add("john.smith@memberbank.com");
-		toEmailAddresses.add("jane.anderson@memberbank.com");
-		toEmailAddresses.add("margaret.thompson@memberbank.com");
+		emailNotification1.setSentDate(sentDate instanceof JsonNull ? "" : sentDate.getAsString());
+		emailNotification1.setFromEmailAddress(fromEmail instanceof JsonNull ? "" : fromEmail.getAsString());
+        List<String> toEmailAddresses = new ArrayList<>();
+        String toAddresses[]= toAddress.getAsString().split(",");
+        for (String toEmail : toAddresses) {
+            toEmailAddresses.add(toEmail);
+        }
 		emailNotification1.setToEmailAddress(toEmailAddresses);
 
-		List<String> ccEmailAddresses = new ArrayList<String>();
-		ccEmailAddresses.add("margaret.thompson@memberbank.com");
+		List<String> ccEmailAddresses = new ArrayList<>();
+        String ccAddresses[]= ccAddress.getAsString().split(",");
+        for (String ccEmail : ccAddresses) {
+            ccEmailAddresses.add(ccEmail);
+        }
 		emailNotification1.setCcEmailAddress(ccEmailAddresses);
-
-		emailNotification1.setNotificationType("Application Received");
-
-		emailNotification1.setSubjectLine("Community Investment Program Application #5000 Received on 11/12/2019");
-
+		emailNotification1.setNotificationType(notificationType instanceof JsonNull ? "" : notificationType.getAsString());
+		emailNotification1.setSubjectLine(subjectLine instanceof JsonNull ? "" : subjectLine.getAsString());
 		emailNotificationsList.add(emailNotification1);
 
 		emailNotificationsAndContacts.setEmailNotificationsList(emailNotificationsList);
@@ -269,25 +265,50 @@ public class ProjectService {
 	}
 
 	public List<ProjectLog> getProjectLog(String projectNo){
-		List<ProjectLog> projectLogList = new ArrayList<ProjectLog>();
-		ProjectLog projectLog = new ProjectLog();
-		projectLog.setProjectDate(new Date().toInstant());
-		projectLog.setEntryDetails("Application Submitted");
-		projectLog.setProjectUser("John Smith (External User- Member# 1");
+        final Project project = getProjectDetails(projectNo);
+        List<ProjectLog> projectLogList = new ArrayList<>();
+        final String dataHubEndpointProjectLogs = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/project-logs/" + project.getId();
+        final RestTemplate restTemplate = new RestTemplate();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjectLogs,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement worker = jObj.get("worker");
+        JsonElement entryDetails = jObj.get("entryDetails");
+        JsonElement date = jObj.get("date");
+
+        ProjectLog projectLog = new ProjectLog();
+		projectLog.setProjectDate(date instanceof JsonNull ? "" : date.getAsString());
+		projectLog.setEntryDetails(entryDetails instanceof JsonNull ? "" : entryDetails.getAsString());
+		projectLog.setProjectUser(worker instanceof JsonNull ? "" : worker.getAsString());
 		projectLogList.add(projectLog);
 
-		ProjectLog projectLog1 = new ProjectLog();
-		projectLog1.setProjectDate(new Date().toInstant());
-		projectLog1.setEntryDetails("'Application Received' email notification sent");
-		projectLog1.setProjectUser("System");
-		projectLogList.add(projectLog1);
-
-		ProjectLog projectLog2 = new ProjectLog();
-		projectLog2.setProjectDate(new Date().toInstant());
-		projectLog2.setEntryDetails("Analyst Review Complete");
-		projectLog2.setProjectUser("Jennifer Alberto");
-		projectLogList.add(projectLog2);
 		return projectLogList;
 	}
+
+    private Project getProjectDetails(String projectNumber) {
+        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
+        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
+        final RestTemplate restTemplate = new RestTemplate();
+        final Project project = new Project();
+
+        final String json = restTemplate.getForObject(
+            dataHubEndpointProjects,
+            String.class);
+
+        final JsonObject jObj = new JsonParser().parse(json).getAsJsonObject();
+
+        JsonElement projectName = jObj.get("projectName");
+        JsonElement idJSONElement = jObj.get("id");
+
+        project.setId(idJSONElement instanceof JsonNull ? "" : idJSONElement.getAsString());
+        project.setProjectNo(projectNumber);
+        project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
+
+        return project;
+    }
 
 }

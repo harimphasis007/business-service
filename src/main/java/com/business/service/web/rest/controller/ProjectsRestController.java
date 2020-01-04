@@ -28,14 +28,14 @@ public class ProjectsRestController {
 
 	// Logger instance
 	private static final Logger logger = LoggerFactory.getLogger(ProjectsRestController.class);
-	
+
 	@Autowired
 	private ProjectService projectService;
 
 	/*
 	@RequestMapping(value = "/getProjects", method = RequestMethod.GET)
 	public List<Project> getProjects(@RequestParam(value = "request") String request,	@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start getSomething");
 			logger.debug("data: '" + request + "'");
@@ -66,10 +66,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}*/
-	
+
 	@RequestMapping(value = "/getProjects", method = RequestMethod.GET)
 	public List<Project> getProjects() {
-		
+
 		List<Project> response = null;
 
 		response = projectService.getProjects();
@@ -80,10 +80,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/getSearchControls", method = RequestMethod.GET)
 	public SearchControl getSearchControls() {
-		
+
 		SearchControl response;
 
 		response = projectService.getSearchControl();
@@ -94,10 +94,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/getProjectInfoBeneficiaries", method = RequestMethod.GET)
 	public ProjectDetails getProjectInfoBeneficiaries(@RequestParam String projectNo) {
-		
+
 		ProjectDetails response;
 
 		response = projectService.getProjectInfoBeneficiaries(projectNo);
@@ -108,10 +108,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/getApplicationReviewDetails", method = RequestMethod.GET)
 	public ApplicationReviewDetails getApplicationReviewDetails(@RequestParam String projectNo) {
-		
+
 		ApplicationReviewDetails response;
 
 		response = projectService.getApplicationReviewDetails(projectNo);
@@ -122,10 +122,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/getEmailNotificationsAndContacts", method = RequestMethod.GET)
 	public EmailNotificationsAndContacts getEmailNotificationsAndContacts(@RequestParam String projectNo) {
-		
+
 		EmailNotificationsAndContacts response;
 
 		response = projectService.getEmailNotificationsAndContacts(projectNo);
@@ -136,10 +136,10 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/getProjectLog", method = RequestMethod.GET)
 	public List<ProjectLog> getProjectLog(@RequestParam String projectNo) {
-		
+
 		List<ProjectLog> response;
 
 		response = projectService.getProjectLog(projectNo);
@@ -150,15 +150,15 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
-	
+
 	@RequestMapping(value = "/searchProject", method = RequestMethod.GET)
-	public List<Project> searchProject(@RequestParam String projectNo, 
-			@RequestParam String projectName, 
-			@RequestParam String program, 
-			@RequestParam String projectStatus, 
-			@RequestParam String commitmentStatus, 
-			@RequestParam String member) {
-		
+	public List<Project> searchProject(@RequestParam(required = false) String projectNo,
+			@RequestParam(required = false) String projectName,
+			@RequestParam(required = false) String program,
+			@RequestParam(required = false) String projectStatus,
+			@RequestParam(required = false) String commitmentStatus,
+			@RequestParam(required = false) String member) {
+
 		List<Project> response;
 
 		response = projectService.searchProject(projectNo, projectName, program, projectStatus, commitmentStatus, member);
@@ -173,7 +173,7 @@ public class ProjectsRestController {
 
 	@RequestMapping(value = "/<add method name here>", method = RequestMethod.POST)
 	public String postSomething(@RequestParam(value = "request") String request,@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start postSomething");
 			logger.debug("data: '" + request + "'");
@@ -206,7 +206,7 @@ public class ProjectsRestController {
 
 	@RequestMapping(value = "/<add method name here>", method = RequestMethod.PUT)
 	public String putSomething(@RequestBody String request,@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start putSomething");
 			logger.debug("data: '" + request + "'");
@@ -239,7 +239,7 @@ public class ProjectsRestController {
 
 	@RequestMapping(value = "/<add method name here>", method = RequestMethod.DELETE)
 	public void deleteSomething(@RequestBody String request,@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
-		
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start putSomething");
 			logger.debug("data: '" + request + "'");
