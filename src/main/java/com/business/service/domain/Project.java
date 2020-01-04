@@ -129,21 +129,21 @@ public class Project {
         return this;
     }
 
-    public Project addDrawdownHistory(DrawdownHistory drawdownHistory) {
-        this.drawdownHistories.add(drawdownHistory);
-        drawdownHistory.setProject(this);
-        return this;
-    }
-
-    public Project removeDrawdownHistory(DrawdownHistory drawdownHistory) {
-        this.drawdownHistories.remove(drawdownHistory);
-        drawdownHistory.setProject(null);
-        return this;
-    }
-
-    public void setDrawdownHistories(Set<DrawdownHistory> drawdownHistories) {
-        this.drawdownHistories = drawdownHistories;
-    }
+//    public Project addDrawdownHistory(DrawdownHistory drawdownHistory) {
+//        this.drawdownHistories.add(drawdownHistory);
+//        drawdownHistory.setProject(this);
+//        return this;
+//    }
+//
+//    public Project removeDrawdownHistory(DrawdownHistory drawdownHistory) {
+//        this.drawdownHistories.remove(drawdownHistory);
+//        drawdownHistory.setProject(null);
+//        return this;
+//    }
+//
+//    public void setDrawdownHistories(Set<DrawdownHistory> drawdownHistories) {
+//        this.drawdownHistories = drawdownHistories;
+//    }
 
 
     public Project projectNo(String projectNo) {
@@ -239,21 +239,21 @@ public class Project {
         return this;
     }
 
-    public Project addLoan(Loan loan) {
-        this.loans.add(loan);
-        loan.setProject(this);
-        return this;
-    }
-
-    public Project removeLoan(Loan loan) {
-        this.loans.remove(loan);
-        loan.setProject(null);
-        return this;
-    }
-
-    public void setLoans(Set<Loan> loans) {
-        this.loans = loans;
-    }
+//    public Project addLoan(Loan loan) {
+//        this.loans.add(loan);
+//        loan.setProject(this);
+//        return this;
+//    }
+//
+//    public Project removeLoan(Loan loan) {
+//        this.loans.remove(loan);
+//        loan.setProject(null);
+//        return this;
+//    }
+//
+//    public void setLoans(Set<Loan> loans) {
+//        this.loans = loans;
+//    }
 
 //    public Set<ProjectLog> getProjectLogs() {
 //        return projectLogs;

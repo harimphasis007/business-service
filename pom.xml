@@ -315,6 +315,12 @@
             <artifactId>cucumber-spring</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>gherkin</artifactId>
+            <version>5.1.0</version>
+            <scope>compile</scope>
+        </dependency>
         <!-- jhipster-needle-maven-add-dependency -->
     </dependencies>
 

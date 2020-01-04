@@ -31,7 +31,7 @@ public class DrawdownHistory implements Serializable {
 
     private String intSubsidyCr;
 
-    private Project project;
+    private Projectpojo project;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -159,16 +159,16 @@ public class DrawdownHistory implements Serializable {
         this.intSubsidyCr = intSubsidyCr;
     }
 
-    public Project getProject() {
+    public Projectpojo getProjectpojo() {
         return project;
     }
 
-    public DrawdownHistory project(Project project) {
+    public DrawdownHistory project(Projectpojo project) {
         this.project = project;
         return this;
     }
 
-    public void setProject(Project project) {
+    public void setProjectpojo(Projectpojo project) {
         this.project = project;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
