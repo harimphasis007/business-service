@@ -1,5 +1,6 @@
 package com.business.service.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -306,8 +307,8 @@ public class ProjectService {
         return projectLogList;
     }
     private Project getProjectDetails(String projectNumber) {
-        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
-        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
+        final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
+        //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
         final RestTemplate restTemplate = new RestTemplate();
         final Project project = new Project();
 
@@ -319,10 +320,12 @@ public class ProjectService {
 
         JsonElement projectName = jObj.get("projectName");
         JsonElement idJSONElement = jObj.get("id");
+        JsonElement assignmentId = jObj.getAsJsonObject("application").getAsJsonObject("assignment").get("id");
 
         project.setId(idJSONElement instanceof JsonNull ? "" : idJSONElement.getAsString());
         project.setProjectNo(projectNumber);
         project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
+        project.setAssignmentId(assignmentId instanceof JsonNull ? "" : assignmentId.getAsString());
 
         return project;
     }

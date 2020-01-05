@@ -16,6 +16,7 @@ import com.business.service.service.ProjectService;
  */
 @RestController
 @RequestMapping("/projects")
+@CrossOrigin(origins = "*")
 public class ProjectsRestController {
 
 	// Logger instance
