@@ -54,6 +54,8 @@ spring:
       discovery:
         enabled: true
 
+
+
 server:
   port: 8082
 
@@ -98,6 +100,8 @@ jhipster:
       host: localhost
       port: 5000
       queue-size: 512
+
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -108,3 +112,5 @@ jhipster:
 # ===================================================================
 
 # application:
+
+dataserviceuri: http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/

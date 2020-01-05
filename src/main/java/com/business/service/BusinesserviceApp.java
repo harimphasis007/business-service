@@ -2,9 +2,7 @@ package com.business.service;
 
 import com.business.service.config.ApplicationProperties;
 import com.business.service.config.DefaultProfileUtil;
-
 import io.github.jhipster.config.JHipsterConstants;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +10,11 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.client.RestTemplate;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,6 +23,7 @@ import java.util.Collection;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
+@CrossOrigin(origins = "*")
 public class BusinesserviceApp implements InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(BusinesserviceApp.class);
@@ -93,5 +96,10 @@ public class BusinesserviceApp implements InitializingBean {
             serverPort,
             contextPath,
             env.getActiveProfiles());
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder.build();
     }
 }

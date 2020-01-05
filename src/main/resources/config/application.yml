@@ -152,6 +152,7 @@ jhipster:
     contact-email:
     license:
     license-url:
+
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -162,3 +163,4 @@ jhipster:
 # ===================================================================
 
 # application:
+dataserviceuri: http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/
