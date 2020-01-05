@@ -1,22 +1,14 @@
 package com.business.service.web.rest.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import com.business.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.business.service.domain.ApplicationReviewDetails;
-import com.business.service.domain.EmailNotificationsAndContacts;
-import com.business.service.domain.Project;
-import com.business.service.domain.ProjectDetails;
-import com.business.service.domain.ProjectLog;
-import com.business.service.domain.SearchControl;
 import com.business.service.service.ProjectService;
 
 /**
@@ -150,6 +142,32 @@ public class ProjectsRestController {
 		}
 		return response;
 	}
+
+
+    @PostMapping(value = "/addProjectLog")
+    public String postProjectLog(@RequestParam(required = false) String projectNo,
+                                           @RequestParam(required = false) String projectDate,
+                                           @RequestParam(required = false) String projectUser,
+                                           @RequestParam(required = false) String entryDetails
+                                           ){
+
+        String response = null;
+
+        try{
+            LocalDate localDate = LocalDate.parse(projectDate);
+            ProjectLogpojo projectLogpojo = projectService.postProjectLog(projectNo, localDate, projectUser, entryDetails);
+            response = projectLogpojo.toString();
+            if (logger.isDebugEnabled()) {
+                logger.debug("result: '" + response + "'");
+                logger.debug("End getSomething");
+            }
+
+        }catch (Exception e){
+            response =  "Date formate should be YYYY-MM-DD";
+        }
+
+        return response;
+    }
 
 	@RequestMapping(value = "/searchProject", method = RequestMethod.GET)
 	public List<Project> searchProject(@RequestParam(required = false) String projectNo,
