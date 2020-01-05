@@ -21,6 +21,7 @@ public class Project {
 	private String projEffDate;
 	private String custNo;
 	private String custContactId;
+    private String assignmentId;
 
     public String getId() {
         return id;
@@ -190,7 +191,16 @@ public class Project {
     public void setCommitment(Commitment commitment) {
         this.commitment = commitment;
     }
-//
+
+    public String getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(String assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
+    //
 //    public Assignment getAssignment() {
 //        return assignment;
 //    }
