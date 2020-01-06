@@ -3,6 +3,7 @@ package com.business.service.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,7 +22,14 @@ public class Project {
 	private String projEffDate;
 	private String custNo;
 	private String custContactId;
+    private String infoBeneficiariesId;
+    private Application application;
     private String assignmentId;
+    private String currentAssign;
+    private String currentAssStDate;
+    private Set<String> analystsAssigned;
+    private Set<String> managersAssigned;
+
 
     public String getId() {
         return id;
@@ -198,6 +206,54 @@ public class Project {
 
     public void setAssignmentId(String assignmentId) {
         this.assignmentId = assignmentId;
+    }
+
+    public String getInfoBeneficiariesId() {
+        return infoBeneficiariesId;
+    }
+
+    public void setInfoBeneficiariesId(String infoBeneficiariesId) {
+        this.infoBeneficiariesId = infoBeneficiariesId;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
+    public String getCurrentAssign() {
+        return currentAssign;
+    }
+
+    public void setCurrentAssign(String currentAssign) {
+        this.currentAssign = currentAssign;
+    }
+
+    public String getCurrentAssStDate() {
+        return currentAssStDate;
+    }
+
+    public void setCurrentAssStDate(String currentAssStDate) {
+        this.currentAssStDate = currentAssStDate;
+    }
+
+    public Set<String> getAnalystsAssigned() {
+        return analystsAssigned;
+    }
+
+    public void setAnalystsAssigned(Set<String> analystsAssigned) {
+        this.analystsAssigned = analystsAssigned;
+    }
+
+    public Set<String> getManagersAssigned() {
+        return managersAssigned;
+    }
+
+    public void setManagersAssigned(Set<String> managersAssigned) {
+        this.managersAssigned = managersAssigned;
     }
 
     //

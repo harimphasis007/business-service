@@ -1,7 +1,8 @@
 package com.business.service.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import com.google.gson.*;
 
@@ -39,9 +40,15 @@ public class ProjectService {
 
         for (int i = 0; i < jarr.size(); i++) {
             final Project project = new Project();
+            final Application application = getApplication(jarr.get(i).getAsJsonObject().getAsJsonObject("application"));
             JsonElement id = jarr.get(i).getAsJsonObject().get("id");
             JsonElement projectNo = jarr.get(i).getAsJsonObject().get("projectNo");
             JsonElement projectName = jarr.get(i).getAsJsonObject().get("projectName");
+            JsonElement currentAssign = jarr.get(i).getAsJsonObject().getAsJsonObject("assignment").get("currentAssign");
+            JsonElement currentAssStDate = jarr.get(i).getAsJsonObject().getAsJsonObject("assignment").get("currentAssStDate");
+            //There should be multiple assignments but coming only one as part of Project object, in future if this change then accordingly it has to revisit
+            JsonElement analystAssign = jarr.get(i).getAsJsonObject().getAsJsonObject("assignment").get("analystAssign");
+            JsonElement managerAssign = jarr.get(i).getAsJsonObject().getAsJsonObject("assignment").get("managerAssign");
             JsonElement program = jarr.get(i).getAsJsonObject().getAsJsonObject("program").get("programName");
             JsonElement memberName = jarr.get(i).getAsJsonObject().getAsJsonObject("member").get("memberName");
             JsonElement projectStatus = jarr.get(i).getAsJsonObject().get("projectStatus");
@@ -58,11 +65,36 @@ public class ProjectService {
             String commitmentBal = jarr.get(i).getAsJsonObject().getAsJsonObject("commitment").get("commitmentBal").getAsString();
             project.setCommitmentBalance(Float.parseFloat(commitmentBal.isEmpty()? "0": commitmentBal));
             project.setCommitmentExpiration(commitmentExpiration instanceof JsonNull ? "" : commitmentExpiration.getAsString());
+            project.setApplication(application);
+            project.setCurrentAssign(currentAssign instanceof JsonNull ? "" : currentAssign.getAsString());
+            project.setCurrentAssStDate(currentAssStDate instanceof JsonNull ? "" : currentAssStDate.getAsString());
+            project.setAnalystsAssigned(new HashSet<>(Arrays.asList(analystAssign instanceof JsonNull ? "" : analystAssign.getAsString())));
+            project.setManagersAssigned(new HashSet<>(Arrays.asList(managerAssign instanceof JsonNull ? "" : managerAssign.getAsString())));
             projects.add(project);
         }
 
 		return projects;
 	}
+
+	private Application getApplication(final JsonObject jObj) {
+	    final Application application = new Application();
+        JsonElement applicationNo = jObj.get("applicationNo");
+        JsonElement applicationDate = jObj.get("applicationDate");
+        JsonElement applicationReviewStatus = jObj.get("applicationReviewStatus");
+        JsonElement createdOn = jObj.get("createdOn");
+        JsonElement createdBy = jObj.get("createdBy");
+        JsonElement currentCompletePer = jObj.get("currentCompletePer");
+        JsonElement lastUpdatedOn = jObj.get("lastUpdatedOn");
+
+        application.setApplicationNo(applicationNo instanceof JsonNull ? "" : applicationNo.getAsString());
+        application.setApplicationDate(applicationDate instanceof JsonNull ? "" : applicationDate.getAsString());
+        application.setApplicationReviewStatus(applicationReviewStatus instanceof JsonNull ? "" : applicationReviewStatus.getAsString());
+        application.setCreatedOn(createdOn instanceof JsonNull ? "" : createdOn.getAsString());
+        application.setCreatedBy(createdBy instanceof JsonNull ? "" : createdBy.getAsString());
+        application.setCurrentCompletePer(currentCompletePer instanceof JsonNull ? "" : currentCompletePer.getAsString());
+        application.setLastUpdatedOn(lastUpdatedOn instanceof JsonNull ? "" : lastUpdatedOn.getAsString());
+        return application;
+    }
 
 	public List<Project> searchProject(String projectNo,
 			String projectName,
@@ -116,7 +148,7 @@ public class ProjectService {
 	public ProjectDetails getProjectInfoBeneficiaries(String projectNo) {
 	    final Project project = getProjectDetails(projectNo);
         final ProjectDetails projectDetails = new ProjectDetails();
-        final String dataHubEndpointProjectInfoBeneficiaries = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/info-beneficiaries/" + project.getId();
+        final String dataHubEndpointProjectInfoBeneficiaries = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/info-beneficiaries/" + project.getInfoBeneficiariesId();
         final RestTemplate restTemplate = new RestTemplate();
 
         final String json = restTemplate.getForObject(
@@ -187,13 +219,25 @@ public class ProjectService {
 		applicationReviewDetails.setCurrentReviewStatus(currentReviewStatus instanceof JsonNull ? "" : currentReviewStatus.getAsString());
 		applicationReviewDetails.setCurrentAssignment(currentAssign instanceof JsonNull ? "" : currentAssign.getAsString());
 		applicationReviewDetails.setCurrentAssignmentStartDate(currentAssStDate instanceof JsonNull ? "" : currentAssStDate.getAsString());
-		applicationReviewDetails.setCurrentTurntimeDaysElapsed(6);
+        getCurrentTurnTimeDaysElapsed(applicationReviewDetails);
 		applicationReviewDetails.setAssignedAnalyst(analystAssign instanceof JsonNull ? "" : analystAssign.getAsString());
 		applicationReviewDetails.setAnalystReviewStartDate(reviewStartDate instanceof JsonNull ? "" : reviewStartDate.getAsString());
 		applicationReviewDetails.setAssinedManager(managerAssign instanceof JsonNull ? "" : managerAssign.getAsString());
 
 		return applicationReviewDetails;
 	}
+
+	private void getCurrentTurnTimeDaysElapsed(final ApplicationReviewDetails applicationReviewDetails) {
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date date = format.parse(applicationReviewDetails.getCurrentAssignmentStartDate());
+            Date today = new java.util.Date();
+            long diffInMillies = today.getTime() - date.getTime();
+            applicationReviewDetails.setCurrentTurntimeDaysElapsed((int)(diffInMillies/(1000*60*60*24)));
+        } catch (Exception e) {
+            applicationReviewDetails.setCurrentTurntimeDaysElapsed(-1);
+        }
+    }
 
 	public EmailNotificationsAndContacts getEmailNotificationsAndContacts(String projectNo) {
         final Project project = getProjectDetails(projectNo);
@@ -317,11 +361,13 @@ public class ProjectService {
         JsonElement projectName = jObj.get("projectName");
         JsonElement idJSONElement = jObj.get("id");
         JsonElement assignmentId = jObj.getAsJsonObject("application").getAsJsonObject("assignment").get("id");
+        JsonElement infoBeneficiariesId = jObj.getAsJsonObject("infoBeneficiaries").get("id");
 
         project.setId(idJSONElement instanceof JsonNull ? "" : idJSONElement.getAsString());
         project.setProjectNo(projectNumber);
         project.setProjName(projectName instanceof JsonNull ? "" : projectName.getAsString());
         project.setAssignmentId(assignmentId instanceof JsonNull ? "" : assignmentId.getAsString());
+        project.setInfoBeneficiariesId(infoBeneficiariesId instanceof JsonNull ? "" : infoBeneficiariesId.getAsString());
 
         return project;
     }
