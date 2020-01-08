@@ -3,21 +3,23 @@ package com.business.service.service;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
+import java.time.LocalDate;
 import com.google.gson.*;
-
 import com.business.service.domain.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import org.springframework.web.client.RestTemplate;
 
 @Service
 public class ProjectService {
 	private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
-	public List<Project> getProjects(){
+    @Value("${dataserviceuri}")
+    String uri;
+
+    public List<Project> getProjects() {
         final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects";
         final List<Project>  projects = new ArrayList<>();
         final RestTemplate restTemplate = new RestTemplate();
@@ -266,7 +268,7 @@ public class ProjectService {
 
 	public EmailNotificationsAndContacts getEmailNotificationsAndContacts(String projectNo) {
         final Project project = getProjectDetails(projectNo);
-        final EmailNotificationsAndContacts emailNotificationsAndContacts = new EmailNotificationsAndContacts();
+        EmailNotificationsAndContacts emailNotificationsAndContacts = new EmailNotificationsAndContacts();
         final String dataHubEndpointProjectNotificationHistories = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/notification-histories/" + project.getId();
         final RestTemplate restTemplate = new RestTemplate();
 
@@ -310,8 +312,7 @@ public class ProjectService {
 
 		return emailNotificationsAndContacts;
 	}
-
-	private void getProjectContacts(final EmailNotificationsAndContacts emailNotificationsAndContacts, final String assignmentId) {
+    private void getProjectContacts(final EmailNotificationsAndContacts emailNotificationsAndContacts, final String assignmentId) {
         final String dataHubEndpointProjectWorkerHistories = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/workerhistorybyassignment/" + assignmentId;
         final List<ProjectContacts> projectContactsList = new ArrayList<>();
         final RestTemplate restTemplate = new RestTemplate();
@@ -343,7 +344,7 @@ public class ProjectService {
         emailNotificationsAndContacts.setProjectContactsList(projectContactsList);
     }
 
-	public List<ProjectLog> getProjectLog(String projectNo){
+    public List<ProjectLog> getProjectLog(String projectNo){
         final Project project = getProjectDetails(projectNo);
         List<ProjectLog> projectLogList = new ArrayList<>();
         final String dataHubEndpointProjectLogs = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectlogsbyproject/" + project.getId();
@@ -368,9 +369,8 @@ public class ProjectService {
             projectLogList.add(projectLog);
         }
 
-		return projectLogList;
-	}
-
+        return projectLogList;
+    }
     private Project getProjectDetails(String projectNumber) {
         final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projectsbyprojectid/" + projectNumber;
         //final String dataHubEndpointProjects = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/projects/1";
@@ -395,6 +395,25 @@ public class ProjectService {
         project.setInfoBeneficiariesId(infoBeneficiariesId instanceof JsonNull ? "" : infoBeneficiariesId.getAsString());
 
         return project;
+    }
+
+    public ProjectLogpojo postProjectLog(String projectNo, LocalDate date, String worker, String entryDetails) {
+        final String dataHubEndpointProjectLogs = uri + "addprojectlog/" + projectNo;
+
+        final RestTemplate restTemplate = new RestTemplate();
+
+        ProjectLogpojo projectLog = new ProjectLogpojo();
+        projectLog.setDate(date);
+        projectLog.setEntryDetails(entryDetails);
+        projectLog.setWorker(worker);
+
+
+        final ProjectLogpojo json = restTemplate.postForObject(
+            dataHubEndpointProjectLogs,
+            projectLog, ProjectLogpojo.class);
+
+
+        return json;
     }
 
 }
