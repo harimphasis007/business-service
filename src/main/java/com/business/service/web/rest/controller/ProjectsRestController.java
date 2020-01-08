@@ -201,12 +201,12 @@ public class ProjectsRestController {
 		return response;
 	}
 
-	@RequestMapping(value = "/<add method name here>", method = RequestMethod.PUT)
-	public String putSomething(@RequestBody String request,@RequestParam(value = "version", required = false, defaultValue = "1") int version) {
+	@RequestMapping(value = "/updateProjectInfoBeneficiaries", method = RequestMethod.PUT)
+	public String putSomething(@RequestBody ProjectDetails projectDetails, @RequestParam(value = "version", required = false, defaultValue = "1") int version) {
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("Start putSomething");
-			logger.debug("data: '" + request + "'");
+			logger.debug("data: '" + projectDetails.toString() + "'");
 		}
 
 		String response = null;
@@ -216,9 +216,7 @@ public class ProjectsRestController {
 			case 1:
 				if (logger.isDebugEnabled())
 					logger.debug("in version 1");
-				// TODO: add your business logic here
-				response = "Response from Spring RESTful Webservice : "+ request;
-
+				response = projectService.updateInfoBeneficiaries(projectDetails);
 				break;
 			default:
 				throw new Exception("Unsupported version: " + version);

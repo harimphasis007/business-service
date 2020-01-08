@@ -3,10 +3,11 @@ package com.business.service.domain;
 public class ProjectDetails {
 	private String projectNo;
 	private String projName;
-	
+
 	//Info & Beneficiaries - Properties
 	private String programType;
 	private String projectType;
+	private String infoBeneficiariesId;
 	private int noOfRentalUnits;
 	private int noOfOwnedUnits;
 	private int noOfJobsCreated;
@@ -87,4 +88,12 @@ public class ProjectDetails {
 	public void setOtherBeneficiaries(String otherBeneficiaries) {
 		this.otherBeneficiaries = otherBeneficiaries;
 	}
+
+    public String getInfoBeneficiariesId() {
+        return infoBeneficiariesId;
+    }
+
+    public void setInfoBeneficiariesId(String infoBeneficiariesId) {
+        this.infoBeneficiariesId = infoBeneficiariesId;
+    }
 }
