@@ -173,6 +173,7 @@ public class ProjectService {
 
 		projectDetails.setProjectNo(projectNo);
 		projectDetails.setProjName(project.getProjName());
+		projectDetails.setInfoBeneficiariesId(project.getInfoBeneficiariesId());
 		projectDetails.setProgramType(area instanceof JsonNull ? "" : area.getAsString());
 		projectDetails.setProjectType(developmentInd instanceof JsonNull ? "" : developmentInd.getAsString());
 		projectDetails.setNoOfRentalUnits(rentalUnits instanceof JsonNull ? 0 : rentalUnits.getAsInt());
@@ -186,6 +187,30 @@ public class ProjectService {
 
 		return projectDetails;
 	}
+
+	public String updateInfoBeneficiaries(ProjectDetails projectDetails) {
+        final String dataHubEndpointProjectApplicationReviewDetails = "http://mvp-dataservice.us-east-1.elasticbeanstalk.com:5000/services/dataservice/api/info-beneficiaries/";
+        final RestTemplate restTemplate = new RestTemplate();
+        final InfoBeneficiaries infoBeneficiaries = new InfoBeneficiaries();
+
+        infoBeneficiaries.setId(Long.parseLong(projectDetails.getInfoBeneficiariesId()));
+        infoBeneficiaries.setArea(projectDetails.getProgramType());
+        infoBeneficiaries.setDevelopmentInd(projectDetails.getProjectType());
+        infoBeneficiaries.setRentalUnits(projectDetails.getNoOfRentalUnits() + "");
+        infoBeneficiaries.setOwnerOccUnits(projectDetails.getNoOfOwnedUnits() + "");
+        infoBeneficiaries.setJobCreated(projectDetails.getNoOfJobsCreated() + "");
+        infoBeneficiaries.setJobRetained(projectDetails.getNoOfJobsRetained() + "");
+        infoBeneficiaries.setGeoDefinedBeneficiaries(projectDetails.getGeoDefinedBeneficiaries());
+        infoBeneficiaries.setIndividualBeneficiaries(projectDetails.getIndividualBeneficiaries());
+        infoBeneficiaries.setActivityBeneficiaries(projectDetails.getActivityBeneficiaries());
+        infoBeneficiaries.setOtherBeneficiaries(projectDetails.getOtherBeneficiaries());
+
+        restTemplate.put(
+            dataHubEndpointProjectApplicationReviewDetails,
+            infoBeneficiaries);
+
+        return "success";
+    }
 
 	public ApplicationReviewDetails getApplicationReviewDetails(String projectNo) {
         final Project project = getProjectDetails(projectNo);
